@@ -8,7 +8,6 @@ export default class Phone extends PureComponent{
 
 
     render(){
-        console.log(this.props.newestList);
         return(
         <div>
             <div className="lightbox-blanket">
@@ -40,10 +39,10 @@ export default class Phone extends PureComponent{
                                 <div className="phone-contacts-wrapper">
                                     <div className="phone-contacts">
                                     {this.props.newestList.map((item, index) => {
-                                        console.log(index);
                                         return (<Receive
                                             key={index}
-                                            phone={item.phone}
+                                            number={item.number}
+                                            msg={item.msg}
                                         />)
                                     })}
                                     </div>

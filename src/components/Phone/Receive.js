@@ -12,8 +12,8 @@ export default class Receive extends PureComponent{
                 </div>
                 <div className='contact-details'>
                     <div className='contact-name'>"삐삐 확인"</div>
-                    <div className='contact-phone'>{this.props.phone}</div>
-                    <div className='contact-phone'>{this.props.content}</div>
+                    <div className='contact-phone'>{this.props.number}</div>
+                    <div className='contact-phone'>{this.props.msg}</div>
                 </div>
             </div>
         );

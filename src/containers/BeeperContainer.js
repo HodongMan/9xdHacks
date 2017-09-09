@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-
 import {Phone} from '../components';
+
+import {getBeeperList, getBeeperNewList, sendBeep} from '../lib/toServer';
 
 export default class BeeperContainer extends Component{
 
@@ -16,23 +17,35 @@ export default class BeeperContainer extends Component{
         this.onClick = this.onClick.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.setNewBeeper = this.setNewBeeper.bind(this);
+        this.setBeeperList = this.setBeeperList.bind(this);
     }
 
     componentDidMount(){
+        this.setBeeperList();
         setInterval(this.setNewBeeper, 6000);
+    }
+
+    setBeeperList(){
+        getBeeperList('8')
+        .then((response) => {
+            this.setState({
+                newestList : response.data,
+            });
+            console.log(response.data);
+        })
+        .catch((error) => console.log(error));
     }
 
     setNewBeeper(){
 
-        let newData = this.state.beeperList;
-
-        newData.forEach((item, index) => {
-            this.notifyMe(item);
-        });
-
-        this.setState({
-            beeperList : [],
-            newestList : newData,
+        getBeeperNewList('8')
+        .then((response) => {
+            if(response.data){
+                response.data.forEach((item, index) => {
+                    this.notifyMe(item);
+                });
+                this.setBeeperList();
+            }
         });
 
     }
@@ -42,12 +55,12 @@ export default class BeeperContainer extends Component{
         if (!("Notification" in window)) {
             alert("This browser does not support desktop notification");
         }else if (Notification.permission === "granted") {
-            let notification = new Notification("삐삐", {body : data.phone});
+            let notification = new Notification("삐삐", {body : data.msg});
         }
         else if (Notification.permission !== 'denied') {
             Notification.requestPermission((permission) => {
                 if (permission === "granted") {
-                    let notification = new Notification("삐삐", {body : data.phone});
+                    let notification = new Notification("삐삐", {body : data.msg});
                 }
             });
         }
@@ -61,13 +74,9 @@ export default class BeeperContainer extends Component{
     }
 
     onSubmit(){
-
-        let newBeeper = Object.assign({}, { phone : this.state.phoneNumberToSend});
-        let newBeeperList = this.state.beeperList;
-        newBeeperList.push(newBeeper);
-        this.setState({
-            beeperList : newBeeperList,
-        });
+        sendBeep(this.state.phoneNumberToSend)
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error));
 
     }
 
@@ -75,7 +84,7 @@ export default class BeeperContainer extends Component{
         return(
             <Phone
                 buttonList={this.state.buttonList}
-                newestList={this.state.newestList.reverse()}
+                newestList={this.state.newestList}
                 phoneNumberToSend={this.state.phoneNumberToSend}
                 onClick={this.onClick}
                 onSubmit={this.onSubmit}
