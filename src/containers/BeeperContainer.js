@@ -31,7 +31,6 @@ export default class BeeperContainer extends Component{
             this.setState({
                 newestList : response.data,
             });
-            console.log(response.data);
         })
         .catch((error) => console.log(error));
     }
@@ -84,7 +83,7 @@ export default class BeeperContainer extends Component{
         return(
             <Phone
                 buttonList={this.state.buttonList}
-                newestList={this.state.newestList}
+                newestList={this.state.newestList.slice(0, 5)}
                 phoneNumberToSend={this.state.phoneNumberToSend}
                 onClick={this.onClick}
                 onSubmit={this.onSubmit}
