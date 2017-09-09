@@ -1,12 +1,14 @@
 import React, {PureComponent} from 'react';
 
 import Button from './Button';
+import Receive from './Receive';
 import './style.css';
 
 export default class Phone extends PureComponent{
 
 
     render(){
+        console.log(this.props.newestList);
         return(
         <div>
             <div className="lightbox-blanket">
@@ -37,6 +39,13 @@ export default class Phone extends PureComponent{
                                 </div>
                                 <div className="phone-contacts-wrapper">
                                     <div className="phone-contacts">
+                                    {this.props.newestList.map((item, index) => {
+                                        console.log(index);
+                                        return (<Receive
+                                            key={index}
+                                            phone={item.phone}
+                                        />)
+                                    })}
                                     </div>
                                 </div>
                             </div>
